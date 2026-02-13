@@ -1,0 +1,147 @@
+/**
+ * Configuration File for ESP32 Doorbell
+ * 
+ * Copy this file to config.h and modify values as needed.
+ * This file contains all user-configurable parameters.
+ */
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// ============================================
+// GPIO PIN CONFIGURATION
+// ============================================
+
+// Button Configuration
+// Note: Must use RTC-capable GPIO for deep sleep wake-up
+// Valid RTC GPIOs: 0, 2, 4, 12, 13, 14, 15, 25, 26, 27, 32, 33, 34, 35, 36, 39
+#define BUTTON_PIN          33
+
+// SD Card Configuration (for ESP32's SD reader)
+// These are standard SPI pins for ESP32
+#define SD_CS_PIN           5     // Chip Select
+#define SD_MOSI_PIN         23    // Master Out Slave In (default)
+#define SD_MISO_PIN         19    // Master In Slave Out (default)
+#define SD_SCK_PIN          18    // Serial Clock (default)
+
+// DFPlayer Mini Configuration
+// Using UART2 on ESP32
+#define DFPLAYER_RX         16    // Connect to DFPlayer TX
+#define DFPLAYER_TX         17    // Connect to DFPlayer RX
+
+// ============================================
+// AUDIO CONFIGURATION
+// ============================================
+
+// Volume Settings
+// Range: 0 (mute) to 30 (maximum)
+// Recommended: 15-25 for indoor use
+#define VOLUME              25
+
+// Track Selection
+// Corresponds to file number on SD card
+// Track 1 = 0001.mp3, Track 2 = 0002.mp3, etc.
+#define TRACK_NUMBER        1
+
+// Equalizer Settings (optional)
+// Options: NORMAL, POP, ROCK, JAZZ, CLASSIC, BASS
+// Uncomment to use:
+// #define USE_EQUALIZER
+// #define EQ_MODE            NORMAL
+
+// ============================================
+// TIMING CONFIGURATION
+// ============================================
+
+// Delay after playback before entering sleep (milliseconds)
+// Adjust based on your audio file length
+// Recommended: 2000-5000ms for typical doorbell sounds
+#define PLAYBACK_DELAY      5000
+
+// Playback wait time (milliseconds)
+// Time to wait for audio to complete
+// Should be slightly longer than your audio file
+#define PLAYBACK_WAIT_TIME  3000
+
+// Button debounce delay (milliseconds)
+#define DEBOUNCE_DELAY      50
+
+// DFPlayer initialization timeout (milliseconds)
+#define DFPLAYER_TIMEOUT    2000
+
+// ============================================
+// POWER MANAGEMENT
+// ============================================
+
+// Enable/Disable Deep Sleep
+// Set to false for debugging (stays awake)
+#define ENABLE_DEEP_SLEEP   true
+
+// Wake-up trigger level
+// 0 = wake on LOW (button connects to GND)
+// 1 = wake on HIGH (button connects to VCC)
+#define WAKEUP_LEVEL        0
+
+// ============================================
+// DEBUG CONFIGURATION
+// ============================================
+
+// Enable serial debug output
+#define DEBUG_ENABLED       true
+
+// Serial baud rate
+#define SERIAL_BAUD         115200
+
+// Verbose logging
+// Set to true for detailed DFPlayer communication logs
+#define VERBOSE_LOGGING     false
+
+// ============================================
+// ADVANCED FEATURES (Optional)
+// ============================================
+
+// Enable boot counter
+// Useful for debugging wake-up cycles
+#define ENABLE_BOOT_COUNTER true
+
+// Enable SD card info display
+#define SHOW_SD_INFO        true
+
+// Enable DFPlayer status checks
+#define CHECK_DFPLAYER_STATUS true
+
+// ============================================
+// HARDWARE VARIANTS
+// ============================================
+
+// Uncomment your board variant:
+// #define BOARD_ESP32_DEVKIT_V1
+// #define BOARD_ESP32_DEVKIT_C
+#define BOARD_ESP32_GENERIC
+
+// DFPlayer Module Variant
+// Some clones have different behavior
+// #define DFPLAYER_CLONE      // Uncomment if using clone module
+
+// ============================================
+// VALIDATION
+// ============================================
+
+#if !defined(BUTTON_PIN)
+#error "BUTTON_PIN must be defined"
+#endif
+
+#if VOLUME < 0 || VOLUME > 30
+#error "VOLUME must be between 0 and 30"
+#endif
+
+#if TRACK_NUMBER < 1
+#error "TRACK_NUMBER must be at least 1"
+#endif
+
+// Validate RTC GPIO for wake-up
+#if !defined(WAKEUP_LEVEL) || (WAKEUP_LEVEL != 0 && WAKEUP_LEVEL != 1)
+#error "WAKEUP_LEVEL must be 0 or 1"
+#endif
+
+#endif // CONFIG_H
